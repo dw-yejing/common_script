@@ -10,7 +10,11 @@ for ((i=0; i<${#alias[@]}; i++)); do
 done
 
 # config shell editing mode to vi style
-set -o vi # -o: option
+# -i: edit file in place, 
+# 2i: 2 specifies the lien number, i:stand for insert mode, 
+# -o: option
+sed -i "2i\\set -o vi" ~/.bashrc
+
 
 
 ############ edit .vimrc ############
