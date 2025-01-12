@@ -87,4 +87,10 @@ function do_dmirror{
   }
 }
 Set-Alias dmirror do_dmirror
+
+
+function do_lscpu(){
+	Get-CimInstance Win32_Processor | Format-List *
+}
+Set-Alias lscpu do_lscpu
 " >> $profile
