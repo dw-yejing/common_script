@@ -9,14 +9,47 @@ Set-Alias touch do_touch
 Set-Alias vim notepad
 
 function do_tail {
-    param([int]$N, [string]$Path)
-    Get-Content -Tail $N $Path
+    param(
+        [Parameter(Mandatory=$false, ValueFromPipeline=$true)]
+        [string[]]$InputObject,
+
+        [Parameter(Position=0)]
+        [int]$n = 10,
+
+        [switch]$f  # -f 参数表示实时跟踪文件更新
+    )
+
+    # 如果启用 -f，则实时监控文件
+    if ($f) {
+        if ($InputObject) {
+            # 从管道或参数读取文件路径
+            $file = $InputObject[0]
+            Get-Content $file -Wait -Tail $n
+        }
+        else {
+            Write-Error "必须指定文件路径（例如: tail -f -n 20 a.txt）"
+        }
+    }
+    # 普通模式（仅显示最后 N 行）
+    else {
+        if ($InputObject) {
+            $InputObject | Select-Object -Last $n
+        }
+        else {
+            Write-Error "必须提供输入（例如: Get-Content a.txt | tail -n 5）"
+        }
+    }
 }
 Set-Alias tail do_tail
 
 function do_head {
-    param([int]$N, [string]$Path)
-    Get-Content -Path $Path | Select-Object -First $N
+    param(
+        [Parameter(ValueFromPipeline=$true)]$InputObject,
+        [Parameter(Position=0)][int]$n = 10,
+        [Parameter(Position=1)][string]$file
+    )
+    if ($file) { Get-Content $file | Select-Object -First $n }
+    else { $InputObject | Select-Object -First $n }
 }
 Set-Alias head do_head
 
@@ -93,4 +126,21 @@ function do_lscpu(){
 	Get-CimInstance Win32_Processor | Format-List *
 }
 Set-Alias lscpu do_lscpu
+
+Set-Alias profile show_profile
+function show_profile(){
+    code "C:\Users\Lenovo\Documents\WindowsPowerShell\profile.ps1"
+}
+
+
+Set-Alias uvact do_uvactivate
+function do_uvactivate(){
+    .venv\Scripts\activate
+}
+
+Set-Alias whereis do_whereis
+function do_whereis(){
+    param([string]$pattern)
+    Get-Command -Name *$pattern* | Select-Object Source
+}
 " >> $profile

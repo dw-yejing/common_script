@@ -1,0 +1,5 @@
+Set-Alias whereis do_whereis
+function do_whereis(){
+    param([string]$pattern)
+    Get-Command -Name *$pattern* | Select-Object Source
+}

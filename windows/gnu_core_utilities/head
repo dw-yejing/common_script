@@ -1,0 +1,10 @@
+function do_head {
+    param(
+        [Parameter(ValueFromPipeline=$true)]$InputObject,
+        [Parameter(Position=0)][int]$n = 10,
+        [Parameter(Position=1)][string]$file
+    )
+    if ($file) { Get-Content $file | Select-Object -First $n }
+    else { $InputObject | Select-Object -First $n }
+}
+Set-Alias head do_head

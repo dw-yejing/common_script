@@ -1,0 +1,5 @@
+function do_wc {
+    param([string]$Path)
+    Get-Content -Path $Path | Measure-Object -line  -word -character
+}
+Set-Alias wc do_wc

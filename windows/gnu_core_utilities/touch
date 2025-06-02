@@ -1,0 +1,5 @@
+function do_touch {
+    param([string]$Path)
+    New-Item -ItemType File -Path $Path
+}
+Set-Alias touch do_touch
